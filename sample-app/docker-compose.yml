@@ -1,0 +1,46 @@
+services:
+  app:
+    build: .
+    image: cnds2024-app
+    container_name: cnds2024-app
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - cnds2024
+
+  redis:
+    image: redis:7.0-alpine3.19
+    container_name: cnds2024-redis
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "6379:6379"
+    networks:
+      - cnds2024
+
+networks:
+  cnds2024:
+    name: cnds2024

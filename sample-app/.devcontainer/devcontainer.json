@@ -1,0 +1,120 @@
+{
+	"name": "cnds2024-sample-app",
+	"dockerComposeFile": "docker-compose.devcontainer.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces",
+	"shutdownAction": "stopCompose",
+	"onCreateCommand": "sudo apt update && sudo apt install -y redis-tools",
+	"updateContentCommand": "pip install -e . && pip install -e .[dev]",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.debugpy",
+				"charliermarsh.ruff",
+				"ms-python.mypy-type-checker",
+				"oderwat.indent-rainbow",
+				"njpwerner.autodocstring",
+				"ms-azuretools.vscode-docker",
+				"tamasfe.even-better-toml",
+				"usernamehw.errorlens",
+				"shardulm94.trailing-spaces",
+				"editorconfig.editorconfig",
+				"gruntfuggly.todo-tree"
+			],
+			"settings": {
+				"python.languageServer": "Pylance",
+				"remote.autoForwardPortsFallback": 0,
+				"trailing-spaces.trimOnSave": true,
+				"files.trimFinalNewlines": true,
+				"editor.minimap.enabled": false,
+				"editor.formatOnSave": true,
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.analysis.typeCheckingMode": "off",
+				"python.testing.unittestEnabled": false,
+				"python.testing.pytestEnabled": true,
+				"python.testing.pytestPath": "/usr/local/py-utils/bin/pytest",
+				"python.analysis.autoImportCompletions": true,
+				"[python]": {
+					"editor.rulers": [
+						{
+							"column": 79,
+							"color": "#dddcdc"
+						}
+					],
+					"editor.defaultFormatter": "charliermarsh.ruff",
+					"editor.codeActionsOnSave": {
+						"source.organizeImports": "always"
+					}
+				},
+				"ruff.path": [
+					"${home}/.local/bin/ruff"
+				],
+				"ruff.format.args": [
+					"${workspaceFolder}/pyproject.toml"
+				],
+				"ruff.lint.args": [
+					"${workspaceFolder}/pyproject.toml"
+				],
+				"mypy-type-checker.path": [
+					"/usr/local/py-utils/bin/mypy"
+				],
+				"mypy-type-checker.args": [
+					"--config=${workspaceFolder}/pyproject.toml"
+				],
+				"mypy-type-checker.severity": {
+					"error": "Error",
+					"note": "Information"
+				},
+				"files.exclude": {
+					"**/__pycache__": true,
+					"**/.mypy_cache": true,
+					"**/.pytest_cache": true,
+					"**/.ruff_cache": true,
+					"**/**.egg-info": true
+				},
+				"[yaml]": {
+					"editor.insertSpaces": true,
+					"editor.tabSize": 2,
+					"editor.autoIndent": "advanced",
+					"editor.formatOnSave": false,
+					"diffEditor.ignoreTrimWhitespace": true
+				},
+				"todo-tree.general.tags": [
+					"BUG",
+					"HACKME",
+					"FIXME",
+					"TODO",
+					"NOTE"
+				],
+				"todo-tree.highlights.customHighlight": {
+					"BUG": {
+						"icon": "bug",
+						"background": "#DE3163",
+						"foreground": "#FFFFFF"
+					},
+					"HACKME": {
+						"icon": "tools",
+						"background": "#008000",
+						"foreground": "#FFFFFF"
+					},
+					"FIXME": {
+						"icon": "flame",
+						"background": "#FFC300",
+						"foreground": "#000000"
+					},
+					"TODO": {
+						"icon": "checklist",
+						"background": "#0000FF",
+						"foreground": "#FFFFFF"
+					},
+					"NOTE": {
+						"icon": "comment",
+						"background": "#808080",
+						"foreground": "#FFFFFF"
+					}
+				}
+			}
+		}
+	}
+}

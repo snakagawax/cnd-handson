@@ -1,0 +1,67 @@
+[project]
+name = "color"
+version = "0.1.0"
+description = "Simple server to get colors"
+authors = [{ name = "Hiroaki Hara", email = "npng.h.0709@gmail.com" }]
+readme = "README.md"
+requires-python = "==3.12.*"
+dependencies = [
+    "fastapi~=0.110.0",
+    "uvicorn~=0.29.0",
+    "redis~=5.0.0",
+    "prometheus-client~=0.20.0",
+    "python-json-logger~=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.1.*",
+    "pytest-mock==3.14.*",
+    "httpx==0.27.*",
+    "mypy==1.9.*",
+    "ruff==0.3.*",
+    "types-redis==4.6.*",
+]
+
+[tool.ruff]
+src = ["src"]
+target-version = "py312"
+indent-width = 4
+line-length = 79
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle
+    "F",   # Pyflakes
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+]
+
+ignore = [
+    # https://docs.astral.sh/ruff/rules/undocumented-param/
+    "D417",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+ignore_missing_imports = true
+strict = true
+
+[tool.pytest.init_options]
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

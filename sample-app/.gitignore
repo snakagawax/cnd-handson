@@ -1,0 +1,49 @@
+# OS
+## Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+## PyCharm
+.idea/
+
+## Emacs
+*~
+\#*\#
+
+## VSCode
+.vscode/
+
+## Vim
+### Swap
+[._]*.s[a-v][a-z]
+!*.svg  # comment out if you don't need vector files
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+### Session
+Session.vim
+Sessionx.vim
+
+# Python
+## Byte-compiled
+**/__pycache__/
+
+## Packaging
+**/*.egg-info/
+
+## virtualenv
+**/.venv/
+**/venv/
+
+## pytest
+**/.pytest_cache/
+
+## mypy
+**/.mypy_cache/
+
+## ruff
+**/.ruff_cache/
