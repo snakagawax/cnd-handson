@@ -15,7 +15,9 @@ from redis.exceptions import (
 
 from logger.logger import LoggerName
 
-LOGGER: Final = getLogger(LoggerName.DEFAULT.value)
+LOGGER: Final[logging.Logger] = getLogger(LoggerName.DEFAULT.value)
+REDIS_DEFAULTPORT: Final[int] = 6379
+REDIS_DEFAULT_DB: Final[int] = 0
 
 
 class RedisSingleton:
@@ -23,8 +25,6 @@ class RedisSingleton:
         if not hasattr(cls, "_instance"):
             LOGGER.debug("Creating a new Redis instance")
             cls._instance = super().__new__(cls)
-        else:
-            LOGGER.debug("Using an existing Redis instance")
         return cls._instance
 
     def __init__(self) -> None:
@@ -55,7 +55,7 @@ class RedisSingleton:
                 ConnectionError object; otherwise, returns None.
         """
         try:
-            await self.client.ping()
+            await self._client.ping()
         except ConnectionError as err:
             return err
         return None
@@ -66,7 +66,7 @@ class RedisSingleton:
         Returns:
             bool: True if keys exist, False otherwise.
         """
-        return await self.client.dbsize() > 0
+        return await self._client.dbsize() > 0
 
     async def set_key(self, key: str, value: str) -> RedisError | None:
         """
@@ -82,7 +82,7 @@ class RedisSingleton:
                 RedisError; otherwise, returns None.
         """
         try:
-            await self.client.set(key, value)
+            await self._client.set(key, value)
         except ConnectionError as err:
             return err
         return None
@@ -101,10 +101,9 @@ class RedisSingleton:
                 If there is an error while retrieving colors from
                 the database.
         """
-
         try:
-            async for key in self.client.scan_iter():
-                value = await self.client.get(key)
+            async for key in self._client.scan_iter():
+                value = await self._client.get(key)
                 if value is not None:
                     yield value
         except RedisError as redis_err:
@@ -119,11 +118,22 @@ class RedisSingleton:
             None: If the database is successfully flushed.
         """
         try:
-            await self.client.flushdb(asynchronous=True)
+            await self._client.flushdb(asynchronous=True)
         except RedisError as redis_err:
             return redis_err
         return None
 
     async def close_connection(self) -> None:
         """Closes the Redis connection."""
-        await self.client.close()
+        await self._client.close()
+
+
+def redis_factory() -> RedisSingleton:
+    """
+    Factory function to create a RedisSingleton instance.
+
+    Returns:
+        RedisSingleton: An instance of RedisSingleton.
+    """
+    host: str = os.getenv("REDIS_HOST", "localhost")
+    return RedisSingleton(host=host)

@@ -49,4 +49,4 @@ Devcontainerを立ち上げるとRedisも自動的に立ち上がります。API
 `redis-cli`インストール済みのため、`redis-cli -h redis`にてRedis serverへアクセスが可能です。
 
 ## その他
-- main branchへマージ前のruff, pytest, mypy実行是非の確認は未実装のため、適宜追加(pre-cmmitかGitHub actions想定)
+- main branchへマージ前のruff, pytest, mypy実行是非の確認は未実装のため、適宜追加してください。

@@ -21,9 +21,6 @@ class JsonFormatter(jsonlogger.JsonFormatter):
     Attributes:
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
-
-    Methods:
-        __init__: Initializes the JsonFormatter object.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:

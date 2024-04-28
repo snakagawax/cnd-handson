@@ -1,13 +1,13 @@
 services:
   app:
     build: .
-    image: cnds2024-app
-    container_name: cnds2024-app
+    image: cnds2024-sample-app
+    container_name: cnds2024-sample-app
     deploy:
       resources:
         limits:
-          cpus: "0.5"
-          memory: 128M
+          cpus: "350m"
+          memory: "128M"
       restart_policy:
         condition: on-failure
     environment:
@@ -27,8 +27,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: "0.5"
-          memory: 128M
+          cpus: "100m"
+          memory: "128M"
       restart_policy:
         condition: on-failure
     healthcheck:

@@ -1,3 +1,5 @@
+import logging
+import os
 import random
 import signal
 import time
@@ -11,14 +13,14 @@ from fastapi import Depends, FastAPI, status
 from prometheus_client import generate_latest
 from redis import RedisError
 
-from database import RedisSingleton
+import database
 from logger.logger import LoggerName
 
 LOGGER: Final = getLogger(LoggerName.DEFAULT.value)
 
 
 class Colors(Enum):
-    """Enum class representing different colors."""
+    """Enum class representing colors."""
 
     RED = "red"
     BLUE = "blue"
@@ -40,23 +42,23 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
 
         os.kill(os.getpid(), signal.SIGKILL)
     # NOTE:
-    # 無用なデータ蓄積を防ぐためにRedisにデータが存在する場合は削除。
-    # (前回のアプリケーション停止の際にDBのflushが失敗した場合の対策)
-    if await redis_client.keys_exist():
+    # Flush all keys in the database before starting the program to prevent
+    # unnecessary data accumulation.
+    # The program will continue to run even if the flush operation fails.
+    if await aredis_client.keys_exist():
         LOGGER.info(
             "Some keys exist in the database. "
             "Flushing all keys before starting the program."
         )
-        # NOTE:
-        # DBのflushに失敗してもアプリケーションは起動したいので、
-        # エラーハンドリングは実施しない。
-        await redis_client.flushall()
+        try:
+            await aredis_client.flushall()
+        except RedisError as redis_err:
+            LOGGER.error(
+                f"Failed to flush all keys in the database: {redis_err}"
+            )
     yield
-    flush_err: RedisError | None = await redis_client.flushall()
-    if flush_err:
-        LOGGER.error(f"Failed to flush the database: {flush_err}")
     LOGGER.info("Closing the Redis connectoin")
-    await redis_client.close_connection()
+    await aredis_client.close_connection()
 
 
 app = FastAPI(lifespan=lifespan, title="color service", docs_url=None)
@@ -113,7 +115,7 @@ async def get_colors(
         Colors.GREEN.value: 0,
     }
     try:
-        async for result in redis_client.get_colors():
+        async for result in aredis_client.get_colors():
             match result:
                 case Colors.RED.value:
                     colors[Colors.RED.value] += 1
@@ -124,11 +126,12 @@ async def get_colors(
             total += 1
     except RedisError as redis_err:
         LOGGER.error(f"Failed to retrieve colors from Redis: {redis_err}")
+        return {}
     return {
         "total": total,
-        Colors.RED.value: colors.get(Colors.RED.value),
-        Colors.BLUE.value: colors.get(Colors.BLUE.value),
-        Colors.GREEN.value: colors.get(Colors.GREEN.value),
+        Colors.RED.value: colors[Colors.RED.value],
+        Colors.BLUE.value: colors[Colors.BLUE.value],
+        Colors.GREEN.value: colors[Colors.GREEN.value],
     }
 
 
@@ -137,10 +140,12 @@ if __name__ == "__main__":
     # Run "python main.py" only for local development.
     import uvicorn
 
+    port: str | None = os.getenv("PORT")
     uvicorn.run(
         app="main:app",
-        port=8000,
+        port=int(port) if port else DEFAULT_PORT,
         log_config="logger/logging_override.ini",
         log_level="debug",
+        lifespan="on",
         reload=True,
     )
