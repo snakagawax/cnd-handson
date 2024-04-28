@@ -52,9 +52,24 @@ class LoggingMiddleware(BaseHTTPMiddleware):
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
-    redis_client = _redis_factory()
-    ping_err: RedisError | None = await redis_client.ping()
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """
+    A generator function that handles the lifespan events of
+    the FastAPI application.
+
+    Args:
+        app (FastAPI): The FastAPI application instance.
+        (never used in this function, but need to explicitly define it for
+        lifespan event handling; otherwise, FastAPI will raise an exception.)
+
+    Yields:
+        None
+
+    Returns:
+        None
+    """
+    aredis_client = database.redis_factory()
+    ping_err: RedisError | None = await aredis_client.ping()
     if ping_err:
         LOGGER.critical(f"Failed to connect to Redis: {ping_err}")
         import os

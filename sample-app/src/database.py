@@ -1,7 +1,8 @@
+import logging
 import os
 from collections.abc import AsyncGenerator
 from logging import getLogger
-from typing import Final
+from typing import Final, Optional
 
 import redis.asyncio as aredis
 from redis.asyncio.retry import Retry
@@ -21,29 +22,52 @@ REDIS_DEFAULT_DB: Final[int] = 0
 
 
 class RedisSingleton:
-    def __new__(cls) -> "RedisSingleton":
-        if not hasattr(cls, "_instance"):
-            LOGGER.debug("Creating a new Redis instance")
+    """A singleton class for managing a Redis connection.
+
+    Attributes:
+        _instance (RedisSingleton): The singleton instance of the class.
+        _initialized (bool): Flag indicating if the class has been initialized.
+    """
+
+    _instance: Optional["RedisSingleton"] = None
+    _initialized: bool = False
+
+    def __new__(cls, *args, **kwargs) -> "RedisSingleton":  # type: ignore[no-untyped-def]
+        if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self) -> None:
-        host: str = os.getenv("REDIS_HOST", "localhost")
-        port: int = 6379
-        db: int = 0
-        retry: Retry = Retry(ExponentialBackoff(), 3)
-        retry_on_err: list[type[RedisError]] = [
-            BusyLoadingError,
-            ConnectionError,
-            TimeoutError,
-        ]
-        self.client = aredis.Redis.from_url(
-            f"redis://{host}:{port}/{db}",
-            retry=retry,
-            retry_on_error=retry_on_err,
-            single_connection_client=False,
-            decode_responses=True,
-        )
+    def __init__(
+        self,
+        host: str,
+        port: int = REDIS_DEFAULTPORT,
+        db: int = REDIS_DEFAULT_DB,
+    ) -> None:
+        """Initializes a RedisSingleton instance.
+
+        Args:
+            host (str):
+                The Redis server host.
+            port (int, optional):
+                The Redis server port[default: REDIS_DEFAULT_PORT].
+            db (int, optional):
+                The Redis database number[default: REDIS_DEFAULT_DB].
+        """
+        if not self._initialized:
+            self._client = aredis.Redis(
+                host=host,
+                port=port,
+                db=db,
+                retry=Retry(ExponentialBackoff(), 5),
+                retry_on_error=[
+                    BusyLoadingError,
+                    ConnectionError,
+                    TimeoutError,
+                ],
+                single_connection_client=True,
+                decode_responses=True,
+            )
+            self._initialized = True
 
     async def ping(self) -> RedisError | None:
         """

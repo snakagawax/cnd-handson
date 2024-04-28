@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+src/__init__.py
+src/db.py
+src/main.py
+src/color.egg-info/PKG-INFO
+src/color.egg-info/SOURCES.txt
+src/color.egg-info/dependency_links.txt
+src/color.egg-info/requires.txt
+src/color.egg-info/top_level.txt
+src/logger/__init__.py
+src/logger/logger.py
+tests/test_main.py

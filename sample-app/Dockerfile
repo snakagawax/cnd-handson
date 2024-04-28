@@ -13,4 +13,4 @@ USER nonroot
 COPY --from=base /usr/local/bin/uvicorn /usr/local/bin/uvicorn
 COPY --from=base /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY ./src .
-ENTRYPOINT [ "uvicorn", "main:app", "--host", "0.0.0.0", "--log-config", "logger/logging_override.ini"]
+ENTRYPOINT [ "uvicorn", "main:app", "--host", "0.0.0.0", "--log-config", "logger/logging_override.ini", "--lifespan", "on"]

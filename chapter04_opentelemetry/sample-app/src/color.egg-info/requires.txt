@@ -1,0 +1,13 @@
+fastapi~=0.110.0
+uvicorn~=0.29.0
+redis~=5.0.0
+prometheus-client~=0.20.0
+python-json-logger~=2.0.0
+
+[dev]
+pytest==8.1.*
+pytest-mock==3.14.*
+httpx==0.27.*
+mypy==1.9.*
+ruff==0.3.*
+types-redis==4.6.*
