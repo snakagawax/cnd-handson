@@ -7,11 +7,16 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from enum import Enum
 from logging import getLogger
-from typing import Annotated, Final
+from typing import Annotated, Final, override
 
 from fastapi import Depends, FastAPI, status
 from prometheus_client import generate_latest
 from redis import RedisError
+from starlette.middleware.base import (
+    BaseHTTPMiddleware,
+    RequestResponseEndpoint,
+)
+from starlette.responses import Response
 
 import database
 from logger.logger import LoggerName
@@ -27,9 +32,21 @@ class Colors(Enum):
     GREEN = "green"
 
 
-def _redis_factory() -> RedisSingleton:
-    """Factory function to create a Redis client."""
-    return RedisSingleton()
+class LoggingMiddleware(BaseHTTPMiddleware):
+    """Logging middleware class for logging HTTP requests and responses."""
+
+    @override
+    async def dispatch(
+        self,
+        request: Request,
+        call_next: RequestResponseEndpoint,
+    ) -> Response:
+        """Override method that logs for specific API requests."""
+        path: str = request.url.path
+        response: Response = await call_next(request)
+        if path.startswith(APP_API_PREFIX):
+            LOGGER.info(f"{request.method} {path} {response.status_code}")
+        return response
 
 
 @asynccontextmanager
