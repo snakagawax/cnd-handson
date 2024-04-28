@@ -9,7 +9,7 @@ from enum import Enum
 from logging import getLogger
 from typing import Annotated, Final, override
 
-from fastapi import Depends, FastAPI, status
+from fastapi import APIRouter, Depends, FastAPI, Request, status
 from prometheus_client import generate_latest
 from redis import RedisError
 from starlette.middleware.base import (
@@ -21,7 +21,9 @@ from starlette.responses import Response
 import database
 from logger.logger import LoggerName
 
-LOGGER: Final = getLogger(LoggerName.DEFAULT.value)
+APP_API_PREFIX: Final[str] = "/api"
+DEFAULT_PORT: Final[int] = 8000
+LOGGER: Final[logging.Logger] = getLogger(LoggerName.DEFAULT.value)
 
 
 class Colors(Enum):
@@ -78,10 +80,10 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
     await aredis_client.close_connection()
 
 
-app = FastAPI(lifespan=lifespan, title="color service", docs_url=None)
+system_router = APIRouter()
 
 
-@app.get("/healthz")
+@system_router.get("/healthz")
 def healthcheck() -> int:
     """
     Perform a health check and return the HTTP status code indicating success.
@@ -92,39 +94,69 @@ def healthcheck() -> int:
     return status.HTTP_200_OK
 
 
-@app.get("/metrics")
+@system_router.get("/metrics")
 def get_metrics() -> bytes:
     """
-    Retrieves the metrics data.
+    Collects the metrics in a Prometheus format.
 
     Returns:
-        The metrics data in the Prometheus format.
+        bytes: The metrics data in bytes format.
     """
     return generate_latest()
 
 
-@app.get("/api/color")
+app_router = APIRouter()
+
+
+@app_router.get("/color")
 async def get_color(
-    redis_client: Annotated[RedisSingleton, Depends(_redis_factory)],
-) -> dict[str, str]:
+    aredis_client: Annotated[
+        database.RedisSingleton, Depends(database.redis_factory)
+    ],
+) -> dict[str, str] | None:
+    """
+    Pick up a random color from the color selection and store it in
+    the database.
+
+    Args:
+        aredis_client (db.RedisSingleton): The Redis client instance
+
+    Returns:
+        dict[str, str]: A dictionary containing the color
+    """
     color: str = random.choice(
         [color.value for color in Colors.__members__.values()]
     )
     color = random.choice(
         [color.value for color in Colors.__members__.values()]
     )
-    set_key_err = await redis_client.set_key(
+    set_key_err = await aredis_client.set_key(
         str(int(time.time() * 1000)), color
     )
     if set_key_err:
         LOGGER.error(f"Failed to set key in Redis: {set_key_err}")
+        return None
     return {"color": color}
 
 
-@app.get("/api/stats")
+@app_router.get("/stats")
 async def get_colors(
-    redis_client: Annotated[RedisSingleton, Depends(_redis_factory)],
-) -> dict[str, int | None]:
+    aredis_client: Annotated[
+        database.RedisSingleton, Depends(database.redis_factory)
+    ],
+) -> dict[str, int]:
+    """
+    Calculate the count of colors from a Redis database.
+
+    Args:
+        aredis_client (db.RedisSingleton): The Redis client instance.
+
+    Returns:
+        dict[str, int | None]:
+            A dictionary containing the total count and individual counts
+            of colors. The keys represent the color names and the values
+            represent the respective counts.
+    """
     total: int = 0
     colors: dict[str, int] = {
         Colors.RED.value: 0,
@@ -151,6 +183,13 @@ async def get_colors(
         Colors.GREEN.value: colors[Colors.GREEN.value],
     }
 
+
+api_router = APIRouter()
+api_router.include_router(system_router)
+api_router.include_router(app_router, prefix=APP_API_PREFIX)
+app = FastAPI(lifespan=lifespan, title="color service", docs_url=None)
+app.include_router(api_router)
+app.add_middleware(LoggingMiddleware)
 
 if __name__ == "__main__":
     # NOTE:
