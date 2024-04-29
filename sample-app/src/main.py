@@ -10,8 +10,8 @@ from logging import getLogger
 from typing import Annotated, Final, override
 
 from fastapi import APIRouter, Depends, FastAPI, Request, status
-from prometheus_client import generate_latest
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_client import make_asgi_app
 from redis import RedisError
 from starlette.middleware.base import (
     BaseHTTPMiddleware,
@@ -110,17 +110,6 @@ def healthcheck() -> int:
     return status.HTTP_200_OK
 
 
-@system_router.get("/metrics")
-def get_metrics() -> bytes:
-    """
-    Collects the metrics in a Prometheus format.
-
-    Returns:
-        bytes: The metrics data in bytes format.
-    """
-    return generate_latest()
-
-
 app_router = APIRouter()
 
 
@@ -212,6 +201,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# NOTE:
+# FastAPI or starlette adds a trailing slash to the path where FastAPI
+# application are mounted as sub-applications. So be sure to access
+# "/metrics/" instead of "/metrics".
+# cf.) https://github.com/prometheus/client_python/issues/1016
+app.mount("/metrics", make_asgi_app())
+
 
 if __name__ == "__main__":
     # NOTE:
