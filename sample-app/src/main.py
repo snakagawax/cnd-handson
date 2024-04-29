@@ -11,6 +11,7 @@ from typing import Annotated, Final, override
 
 from fastapi import APIRouter, Depends, FastAPI, Request, status
 from prometheus_client import generate_latest
+from fastapi.middleware.cors import CORSMiddleware
 from redis import RedisError
 from starlette.middleware.base import (
     BaseHTTPMiddleware,
@@ -205,6 +206,12 @@ api_router.include_router(app_router, prefix=APP_API_PREFIX)
 app = FastAPI(lifespan=lifespan, title="color service", docs_url=None)
 app.include_router(api_router)
 app.add_middleware(LoggingMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if __name__ == "__main__":
     # NOTE:
