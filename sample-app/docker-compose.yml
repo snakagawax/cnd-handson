@@ -21,7 +21,10 @@ services:
       - cnds2024
 
   redis:
-    image: redis:7.0-alpine3.19
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.redis
+    image: cnds2024-redis
     container_name: cnds2024-redis
     deploy:
       replicas: 1

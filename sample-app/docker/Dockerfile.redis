@@ -1,0 +1,4 @@
+# syntax=docker/dockerfile:1
+FROM redis:7.0-alpine3.19
+COPY redis.conf /etc/redis/redis.conf
+CMD [ "redis-server", "/etc/redis/redis.conf" ]
