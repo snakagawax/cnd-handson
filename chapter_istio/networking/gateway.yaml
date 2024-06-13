@@ -13,4 +13,4 @@ spec:
       name: http-app
       protocol: HTTP
     hosts:
-    - app.vmXX.handson.cloudnativedays.jp
+    - app.vm33.handson.cloudnativedays.jp
