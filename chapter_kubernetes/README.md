@@ -521,7 +521,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: hello-world.vmXX.handson.cloudnativedays.jp
+  - host: hello-world.vm01.handson.cloudnativedays.jp
     http:
       paths:
       - pathType: Prefix
@@ -547,7 +547,7 @@ kubectl get ingress
 
 ```Log
 NAME                  CLASS   HOSTS                                         ADDRESS        PORTS   AGE
-hello-world-ingress   nginx   hello-world.vmXX.handson.cloudnativedays.jp   10.96.246.72   80      17m
+hello-world-ingress   nginx   hello-world.vm01.handson.cloudnativedays.jp   10.96.246.72   80      17m
 ```
 
 ### 5.2. 動作確認
@@ -556,7 +556,7 @@ hello-world-ingress   nginx   hello-world.vmXX.handson.cloudnativedays.jp   10.9
 Hello Worldの文字が表示されたら成功です。
 
 ```
- hello-world.vmXX.handson.cloudnativedays.jp
+ hello-world.vm01.handson.cloudnativedays.jp
 ```
 
 動作確認後、リソースを削除します。
@@ -602,7 +602,7 @@ kubectl apply -f rollout.yaml
 続いて、ブラウザで以下にアクセスを行います。
 
 ```
-http://rollout.vmXX.handson.cloudnativedays.jp
+http://rollout.vm01.handson.cloudnativedays.jp
 ```
 
 Pod更新前の状態では、`This app is Blue`の画面が表示がされていると思います。
@@ -629,7 +629,7 @@ kubectl get deployment
 更新後、ブラウザで再度以下にアクセスを行うと`This app is Green`の表示に更新されていることが確認できます。
 
 ```
-http://rollout.vmXX.handson.cloudnativedays.jp
+http://rollout.vm01.handson.cloudnativedays.jp
 ```
 
 尚、ロールバックを行う場合は以下のコマンドで実行可能です。
@@ -670,8 +670,8 @@ kubectl get pod,service,ingress
 
 
 ```
-http://blue.vmXX.handson.cloudnativedays.jp → Blue App
-http://green.vmXX.handson.cloudnativedays.jp → Green App
+http://blue.vm01.handson.cloudnativedays.jp → Blue App
+http://green.vm01.handson.cloudnativedays.jp → Green App
 ```
 
 動作確認実施後、リソースの削除を行います。
