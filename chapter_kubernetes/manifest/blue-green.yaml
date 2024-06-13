@@ -72,7 +72,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: blue.vmXX.handson.cloudnativedays.jp
+  - host: blue.vm41.handson.cloudnativedays.jp
     http:
       paths:
       - pathType: Prefix
@@ -82,7 +82,7 @@ spec:
             name: blue-service
             port:
               number: 80
-  - host: green.vmXX.handson.cloudnativedays.jp
+  - host: green.vm41.handson.cloudnativedays.jp
     http:
       paths:
       - pathType: Prefix

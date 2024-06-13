@@ -86,9 +86,9 @@ data:
         health
         # 下記追加
         hosts {
-           IPアドレス app.argocd.vmXX.handson.cloudnativedays.jp
-           IPアドレス app-preview.argocd.vmXX.handson.cloudnativedays.jp
-           IPアドレス prometheus.vmXX.handson.cloudnativedays.jp
+           IPアドレス app.argocd.vm41.handson.cloudnativedays.jp
+           IPアドレス app-preview.argocd.vm41.handson.cloudnativedays.jp
+           IPアドレス prometheus.vm41.handson.cloudnativedays.jp
            fallthrough
         }
         # ここまで
@@ -170,8 +170,8 @@ git push origin main
  両方のreplicasetが作成されているのは、bluegreen-rollout.yamlにおいてspec.strategy.bluegreen.autoPromotionEnabledがfalseに設定されているからです
 
  それぞれのingressにアクセスすると下記のようにblueとgreenの異なるタイルが表示されていることが確認できます。
- * app.argocd.vmXX.handson.cloudnativedays.jp
- * app-preview.argocd.vmXX.handson.cloudnativedays.jp
+ * app.argocd.vm41.handson.cloudnativedays.jp
+ * app-preview.argocd.vm41.handson.cloudnativedays.jp
 
   ![demoapp](image/BG/demoapp.png)
  rolloutの3点リーダーをクリックし [Promote-Full]をクリックすることで、blue-green deployが行われます。プロモートが行われたどちらのingressもgreenを見るようになり、blueのreplicasetは削除されます。
