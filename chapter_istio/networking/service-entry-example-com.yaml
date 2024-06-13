@@ -1,13 +1,13 @@
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: external-vmXX.handson.cloudnativedays.jp
+  name: external-vm05.handson.cloudnativedays.jp
   namespace: handson
   labels:
-    content: vmXX.handson.cloudnativedays.jp
+    content: vm05.handson.cloudnativedays.jp
 spec:
   hosts:
-  - vmXX.handson.cloudnativedays.jp
+  - vm05.handson.cloudnativedays.jp
   location: MESH_EXTERNAL
   ports:
   - number: 443
