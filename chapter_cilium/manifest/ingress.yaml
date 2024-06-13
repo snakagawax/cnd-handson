@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: cilium
   rules:
-  - host: app.cilium.vmXX.handson.cloudnativedays.jp
+  - host: app.cilium.vm37.handson.cloudnativedays.jp
     http:
       paths:
       - path: /
