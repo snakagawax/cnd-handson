@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: app.vmXX.handson.cloudnativedays.jp
+  - host: app.vm32.handson.cloudnativedays.jp
     http:
       paths:
       - path: /
