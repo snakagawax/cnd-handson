@@ -60,7 +60,7 @@ ingress:
   sslredirect: "false"
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  host: "helm.argocd.vmXX.handson.cloudnativedays.jp"
+  host: "helm.argocd.vm22.handson.cloudnativedays.jp"
   path: /
   pathType: Prefix
   backend:
