@@ -74,24 +74,24 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 hostsファイルには、この演習を通して利用するIPアドレスとドメインの紐付けを設定してください。YOUR_VM_IP_ADDRESSはこの演習で利用するマシンのIPアドレスを指定してください。
 
 ```
-YOUR_VM_IP_ADDRESS    hello-world.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    rollout.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    blue.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    green.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    app.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    prometheus.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    grafana.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    jaeger.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    argocd.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    app.argocd.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    dev.kustomize.argocd.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    prd.kustomize.argocd.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    helm.argocd.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    app-preview.argocd.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    kiali.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    kiali-ambient.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    app.cilium.vmXX.handson.cloudnativedays.jp
-YOUR_VM_IP_ADDRESS    hubble.cilium.vmXX.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    hello-world.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    rollout.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    blue.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    green.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    app.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    prometheus.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    grafana.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    jaeger.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    argocd.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    app.argocd.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    dev.kustomize.argocd.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    prd.kustomize.argocd.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    helm.argocd.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    app-preview.argocd.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    kiali.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    kiali-ambient.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    app.cilium.vm47.handson.cloudnativedays.jp
+YOUR_VM_IP_ADDRESS    hubble.cilium.vm47.handson.cloudnativedays.jp
 ```
 
 ## リポジトリのClone
